@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import index from "./index.css";
+import InputTodo from "./components/InputTodo";
+import Incomplete from "./components/Incomplete";
+import Complete from "./components/Complete";
 
 const App = () => {
   const [todoText, setTodoText] = useState("");
@@ -38,43 +41,22 @@ const App = () => {
 
   return (
     <>
-      <div className="input-area">
-        <input
-          placeholder="TODOを入力"
-          value={todoText}
-          onChange={onChangeText}
-        />
-        <button onClick={onClickAdd}>追加</button>
-      </div>
+      <InputTodo
+        todoText={todoText}
+        onChange={onChangeText}
+        onClick={onClickAdd}
+        disabled={incompleteTodos.length >= 5}
+      />
+      {incompleteTodos.length >= 5 && (
+        <p style={{ color: "red" }}>登録できるtodo5個までです。</p>
+      )}
 
-      <div className="incomplete-area">
-        <p className="title">未完了のTODO</p>
-        <ul>
-          {incompleteTodos.map((todo, index) => {
-            return (
-              <div key={todo} className="list-row">
-                <li>{todo}</li>
-                <button onClick={() => onClickcomplete(index)}>完了</button>
-                <button onClick={() => onClickDelete(index)}>削除</button>
-              </div>
-            );
-          })}
-        </ul>
-      </div>
-
-      <div className="complete-area">
-        <p className="title">完了のTODO</p>
-        <ul>
-          {completeTodos.map((todo, index) => {
-            return (
-              <div key={todo} className="list-row">
-                <li>{todo}</li>
-                <button onClick={() => onClickReturn(index)}>戻す</button>
-              </div>
-            );
-          })}
-        </ul>
-      </div>
+      <Incomplete
+        todos={incompleteTodos}
+        onClickcomplete={onClickcomplete}
+        onClickDelete={onClickDelete}
+      />
+      <Complete todos1={completeTodos} onClickReturn={onClickReturn} />
     </>
   );
 };
